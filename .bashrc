@@ -42,20 +42,11 @@ alias x="exit"
 
 export VISUAL="vim"
 export EDITOR="$VISUAL"
-export GOPATH="$HOME/.golibs"
-export BUN_INSTALL="/home/jacob/.bun"
 export PATH="$PATH:$HOME/bin:$HOME/.scripts"
 export PATH="$PATH:$HOME/.local/bin"
-export PATH="$PATH:/usr/local/go/bin:$GOPATH"
-export PATH="$PATH:/usr/local/go/bin:$GOPATH"
-export PATH="$PATH:$BUN_INSTALL/bin"
-export GOPATH="$GOPATH:$HOME/git-repos/go"
-export APTOS_DISABLE_TELEMETRY="true"
 
 alias ls="ls --group-directories-first --color=tty"
 alias ll="ls -A"
-alias gs="gst"
-alias solc="sudo docker run --rm ethereum/solc:0.8.13"
 
 [ -x "$(command -v rg)" ] && export FZF_DEFAULT_COMMAND='rg --files'
 
@@ -70,9 +61,4 @@ PROMPT_COMMAND='__git_ps1 "\w" "\\\$ "'
 # Record each line as it gets issued
 # PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND"
 
-# PS1="\w$(__git_ps1)$ "
-
-export PATH="$PATH:/home/jacob/.foundry/bin"
-export PATH="$PATH:/home/jacob/.local/share/solana/install/active_release/bin"
-export PATH="$PATH:/home/jacob/.avm/bin"
 
