@@ -66,6 +66,7 @@ source ~/.npm-shortcuts.bash
 
 # # Start SSH agent if not already running or if no keys are loaded
 
+
 # if [ -z "$SSH_AUTH_SOCK" ] || ! ssh-add -l &>/dev/null; then
 #     eval "$(gnome-keyring-daemon --start --components=pkcs11,secrets,ssh)"
 #     export SSH_AUTH_SOCK
