@@ -65,6 +65,7 @@ function check_file () {
 
 check_file ".vimrc"
 check_file ".tmux.conf"
+check_file ".git-shortcuts.bash"
 check_file ".bashrc"
 check_file ".profile"
 check_file ".vim"

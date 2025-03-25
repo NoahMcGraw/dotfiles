@@ -1,5 +1,7 @@
 .vim/bundle
+.vim/.vim
 .tmux/tmux-yank
+.tmux/.tmux
 .vim/.netrwhist
 .vim/undo
 .vim/custom-preferences.vim
