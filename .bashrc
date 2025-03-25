@@ -63,3 +63,10 @@ PROMPT_COMMAND='__git_ps1 "\w" "\\\$ "'
 
 source ~/.git-shortcuts.bash
 source ~/.npm-shortcuts.bash
+
+# Start SSH agent if not already running
+if [ -z "$SSH_AUTH_SOCK" ]; then
+   eval "$(ssh-agent -s)"
+   # Add all private keys that don't end in .pub
+   find ~/.ssh -type f ! -name "*.pub" ! -name "known_hosts" ! -name "config" -exec ssh-add {} \;
+fi
