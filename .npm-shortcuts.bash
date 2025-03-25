@@ -6,7 +6,7 @@
 
 alias nr="npm run"
 alias ni="npm install"
-alias ns="npm start"
-alias nt="npm test"
-alias nb="npm run build"
-alias nd="npm run dev"
+alias nrs="npm run start"
+alias nrt="npm run test"
+alias nrb="npm run build"
+alias nrd="npm run dev"
