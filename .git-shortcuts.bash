@@ -19,30 +19,35 @@
 # alias gsts="git stash"
 
 # Function to chain git commands
-g() {
-    if [ $# -eq 0 ]; then
-        git status  # Default behavior if no arguments
-        return
-    fi
-    
-
+__git_chain() {
     local cmd=""
-    for part in $(echo "$1" | grep -o '.'); do
-        case $part in
-            s) cmd="$cmd git status &&";;
-            a) cmd="$cmd git add -A &&";;
-            c) cmd="$cmd git commit -m \"$2\" &&";;
-            ">") cmd="$cmd git push &&";;
-            "<") cmd="$cmd git pull &&";;
-            "-") cmd="$cmd git stash &&";;
-            "~") cmd="$cmd git checkout &&";;
-            d) cmd="$cmd git diff &&";;
-            r) cmd="$cmd git rebase &&";;
-            m) cmd="$cmd git merge &&";;
-            b) cmd="$cmd git branch &&";;
-            *) echo "Unknown command: $part"; return 1;;
+    local input=${1#g}  # Remove the leading 'g'
+    local msg=$2
+    while [ -n "$input" ]; do
+        case "${input:0:2}" in
+            co) cmd+="git commit -m \"$msg\" && "; input="${input:2}";;
+            pl) cmd+="git pull && "; input="${input:2}";;
+            ps) cmd+="git push && "; input="${input:2}";;
+            ch) cmd+="git checkout && "; input="${input:2}";;
+            st) cmd+="git stash && "; input="${input:2}";;
+            *)
+                case "${input:0:1}" in
+                    a) cmd+="git add -A && "; input="${input:1}";;
+                    d) cmd+="git diff && "; input="${input:1}";;
+                    r) cmd+="git rebase && "; input="${input:1}";;
+                    m) cmd+="git merge && "; input="${input:1}";;
+                    b) cmd+="git branch && "; input="${input:1}";;
+                    s) cmd+="git status && "; input="${input:1}";;
+                    *) input="${input:1}";;
+                esac
+                ;;
         esac
     done
-    cmd=${cmd%" &&"}  # Remove the trailing &&
+    cmd=${cmd% && }
     eval $cmd
 }
+
+# Create dynamic aliases for all possible combinations starting with 'g'
+for cmd in {a,co,pl,ps,ch,st,d,r,m,b,s}{,a,co,pl,ps,ch,st,d,r,m,b,s}{,a,co,pl,ps,ch,st,d,r,m,b,s}; do
+    alias "g$cmd=__git_chain g$cmd"
+done
