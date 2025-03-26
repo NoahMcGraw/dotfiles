@@ -48,7 +48,21 @@ __git_chain() {
     eval $cmd
 }
 
-# Create dynamic aliases for all possible combinations starting with 'g'
-for cmd in {a,co,pl,ps,ch,st,d,r,m,b,s}{,a,co,pl,ps,ch,st,d,r,m,b,s}{,a,co,pl,ps,ch,st,d,r,m,b,s}; do
-    alias "g$cmd=__git_chain g$cmd"
+# Set the maximum number of commands you want to chain
+MAX_CHAIN_LENGTH=5
+
+# Build the brace expansion pattern dynamically
+PATTERN="{"
+COMMANDS="a,co,pl,ps,ch,st,d,r,m,b,s"
+for ((i=1; i<=MAX_CHAIN_LENGTH; i++)); do
+    if [ $i -eq 1 ]; then
+        PATTERN+="$COMMANDS"
+    else
+        PATTERN+="}{"
+        PATTERN+=",$COMMANDS"
+    fi
 done
+PATTERN+="}"
+
+# Create dynamic aliases for all possible combinations starting with 'g'
+eval "for cmd in $PATTERN; do alias \"g\$cmd=__git_chain g\$cmd\"; done"
