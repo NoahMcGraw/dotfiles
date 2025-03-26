@@ -24,6 +24,7 @@ g() {
         git status  # Default behavior if no arguments
         return
     fi
+    
 
     local cmd=""
     for part in $(echo "$1" | grep -o '.'); do
