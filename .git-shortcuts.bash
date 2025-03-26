@@ -11,7 +11,7 @@ __git_chain() {
     shift
     local args=("$@")
     local current_flag=""
-    local command_args=()
+    local next_positional=0
     
     # Parse flags and their arguments
     declare -A flag_args
@@ -22,22 +22,31 @@ __git_chain() {
             if [ -n "$current_flag" ]; then
                 flag_args[$current_flag]="$arg"
                 current_flag=""
+            else
+                # Store positional args with numeric keys
+                flag_args[$next_positional]="$arg"
+                ((next_positional++))
             fi
         fi
     done
 
+    # Track which positional args have been used
+    local pos_arg_index=0
+
     while [ -n "$input" ]; do
         case "${input:0:2}" in
             co) 
-                local msg=${flag_args[co]:-""}
+                local msg=${flag_args[co]:-${flag_args[$pos_arg_index]:-""}}
                 cmd+="git commit -m \"$msg\" && "
+                [[ -z ${flag_args[co]} ]] && ((pos_arg_index++))
                 input="${input:2}"
                 ;;
             pl) cmd+="git pull && "; input="${input:2}";;
             ps) cmd+="git push && "; input="${input:2}";;
             ch) 
-                local branch=${flag_args[ch]:-""}
+                local branch=${flag_args[ch]:-${flag_args[$pos_arg_index]:-""}}
                 cmd+="git checkout $branch && "
+                [[ -z ${flag_args[ch]} ]] && ((pos_arg_index++))
                 input="${input:2}"
                 ;;
             st) cmd+="git stash && "; input="${input:2}";;
@@ -46,13 +55,15 @@ __git_chain() {
                     a) cmd+="git add -A && "; input="${input:1}";;
                     d) cmd+="git diff && "; input="${input:1}";;
                     r) 
-                        local branch=${flag_args[r]:-""}
+                        local branch=${flag_args[r]:-${flag_args[$pos_arg_index]:-""}}
                         cmd+="git rebase $branch && "
+                        [[ -z ${flag_args[r]} ]] && ((pos_arg_index++))
                         input="${input:1}"
                         ;;
                     m) 
-                        local branch=${flag_args[m]:-""}
+                        local branch=${flag_args[m]:-${flag_args[$pos_arg_index]:-""}}
                         cmd+="git merge $branch && "
+                        [[ -z ${flag_args[m]} ]] && ((pos_arg_index++))
                         input="${input:1}"
                         ;;
                     b) cmd+="git branch && "; input="${input:1}";;
