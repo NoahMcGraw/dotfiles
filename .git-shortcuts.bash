@@ -45,25 +45,33 @@ __git_chain() {
             pl) cmd+="git pull && "; input="${input:2}";;
             ps) cmd+="git push && "; input="${input:2}";;
             ch) 
-                local branch=${flag_args[ch]:-${flag_args[$pos_arg_index]:-""}}
-                cmd+="git checkout $branch && "
+                local branch=${flag_args[ch]:-${flag_args[$pos_arg_index]:-"-"}}
+                cmd+="git checkout \"$branch\" && "
                 [[ -z ${flag_args[ch]} ]] && ((pos_arg_index++))
                 input="${input:2}"
                 ;;
-            st) cmd+="git stash && "; input="${input:2}";;
+            st) 
+                if [[ "${input:2:1}" == "a" ]]; then
+                    cmd+="git stash apply && "
+                    input="${input:3}"
+                else
+                    cmd+="git stash && "
+                    input="${input:2}"
+                fi
+                ;;
             *)
                 case "${input:0:1}" in
                     a) cmd+="git add -A && "; input="${input:1}";;
                     d) cmd+="git diff && "; input="${input:1}";;
                     r) 
-                        local branch=${flag_args[r]:-${flag_args[$pos_arg_index]:-""}}
-                        cmd+="git rebase $branch && "
+                        local branch=${flag_args[r]:-${flag_args[$pos_arg_index]:-"-"}}
+                        cmd+="git rebase \"$branch\" && "
                         [[ -z ${flag_args[r]} ]] && ((pos_arg_index++))
                         input="${input:1}"
                         ;;
                     m) 
-                        local branch=${flag_args[m]:-${flag_args[$pos_arg_index]:-""}}
-                        cmd+="git merge $branch && "
+                        local branch=${flag_args[m]:-${flag_args[$pos_arg_index]:-"-"}}
+                        cmd+="git merge \"$branch\" && "
                         [[ -z ${flag_args[m]} ]] && ((pos_arg_index++))
                         input="${input:1}"
                         ;;
@@ -83,7 +91,7 @@ MAX_CHAIN_LENGTH=5
 
 # Build the brace expansion pattern dynamically
 PATTERN="{"
-COMMANDS="a,co,pl,ps,ch,st,d,r,m,b,s"
+COMMANDS="a,co,pl,ps,ch,st,sta,d,r,m,b,s"
 for ((i=1; i<=MAX_CHAIN_LENGTH; i++)); do
     if [ $i -eq 1 ]; then
         PATTERN+="$COMMANDS"
