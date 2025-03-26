@@ -4,7 +4,6 @@
 #
 # A collection of git shortcuts for bash.
 
-
 # Function to chain git commands
 __git_chain() {
     local cmd=""
