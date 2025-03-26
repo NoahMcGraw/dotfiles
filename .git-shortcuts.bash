@@ -4,21 +4,6 @@
 #
 # A collection of git shortcuts for bash.
 
-# Basic git shortcuts
-# alias gs="git status"
-# alias gch="git checkout"
-# alias ga="git add -A"
-# alias gaco="git add -A && git commit -m"
-# alias gco="git commit -m"
-# alias gpl="git pull"
-# alias gps="git push"
-# alias gd="git diff"
-# alias gr="git rebase"
-# alias gm="git merge"
-# alias gb="git branch"
-# alias gsts="git stash"
-
-
 # Function to chain git commands
 __git_chain() {
     local cmd=""
